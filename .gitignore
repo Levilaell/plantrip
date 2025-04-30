@@ -1,0 +1,15 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Node
+node_modules/
+build/
+.env
+
+# Others
+.DS_Store
+*.sqlite3

@@ -1,0 +1,68 @@
+version: "3.8"
+
+services:
+  backend:
+    container_name: django-backend
+    build:
+      context: ./backend-core
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./backend-core:/app
+    ports:
+      - "8000:8000"
+    working_dir: /app
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:alpine
+    container_name: redis-cache
+
+  api-gateway:
+    container_name: nginx-gateway
+    build:
+      context: ./api-gateway
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend/build:/usr/share/nginx/html
+    depends_on:
+      - backend
+
+  flights-service:
+    build:
+      context: ./microservices/flights-service
+    ports:
+      - "5000:5000"
+
+  hotels-service:
+    build:
+      context: ./microservices/hotels-service
+    ports:
+      - "5001:5001"
+
+  poi-service:
+    build:
+      context: ./microservices/poi-service
+    ports:
+      - "5002:5002"
+
+  events-service:
+    build:
+      context: ./microservices/events-service
+    ports:
+      - "5003:5003"
+
+  weather-service:
+    build:
+      context: ./microservices/weather-service
+    ports:
+      - "5004:5004"
+
+  currency-service:
+    build:
+      context: ./microservices/currency-service
+    ports:
+      - "5005:5005"
