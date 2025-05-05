@@ -1,25 +1,18 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import ItineraryList from './pages/ItineraryList'
+import CreateItinerary from './pages/CreateItinerary'
+import ItineraryDetail from './pages/ItineraryDetail'
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Navigate to="/itineraries" replace />} />
+        <Route path="/itineraries" element={<ItineraryList />} />
+        <Route path="/itineraries/new" element={<CreateItinerary />} />
+        <Route path="/itineraries/:id" element={<ItineraryDetail />} />
+      </Routes>
+    </BrowserRouter>
+  )
 }
-
-export default App;

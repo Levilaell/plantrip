@@ -10,6 +10,7 @@ services:
              python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./backend-core:/app
+      - ./langchain_pipeline:/app/langchain_pipeline
     ports:
       - "8000:8000"
     working_dir: /app
@@ -66,3 +67,16 @@ services:
       context: ./microservices/currency-service
     ports:
       - "5005:5005"
+
+  celery-worker:
+    build:
+      context: ./backend-core
+    command: celery -A core worker --loglevel=info
+    environment:
+      - DJANGO_SETTINGS_MODULE=core.settings
+      - CELERY_BROKER_URL=redis://redis:6379/0
+    depends_on:
+      - redis
+    volumes:
+      - ./backend-core:/app
+      - ./langchain_pipeline:/app/langchain_pipeline
